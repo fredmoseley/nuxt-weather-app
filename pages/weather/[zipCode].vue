@@ -1,8 +1,9 @@
 <script setup>
 // 1. Server will make the call api/openweathermap/${routeURL}
 const { zipCode } = useRoute().params;
-console.log('useRoute.params zipCode:', zipCode)
-const { data } = await useFetch(`/api/openweathermap/${zipCode}`)
+console.log('[zipCode].vue useRoute.params zipCode:', zipCode)
+// const { data } = await useFetch(`/api/openweathermap/${zipCode}`)
+const { data } = await useFetch(`/api/openweathermap?zipCode=${zipCode}`)
 
 </script>
 <template>
