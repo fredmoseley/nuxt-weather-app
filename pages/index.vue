@@ -4,15 +4,12 @@ const zipCodeRegex = /^\d{5}$/;
 
 
 const onSubmit = async () => {
-  const zipCodeInput = document.getElementById('zipCodeInput');
-  console.log('Log the zipCode:', zipCode.value);
   if (zipCodeRegex.test(zipCode.value)) {
-    console.log('Valid ZipCode');
     await navigateTo({
         path:`/weather/${zipCode.value}`
     })
   } else {
-    console.log('Invalid ZipCode');
+    console.error('Invalid ZipCode');
   }
 };
 </script>
