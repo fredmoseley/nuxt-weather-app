@@ -3,11 +3,14 @@ const zipCode = useState('zipCode', () => '');
 const zipCodeRegex = /^\d{5}$/;
 
 
-const onSubmit = () => {
+const onSubmit = async () => {
   const zipCodeInput = document.getElementById('zipCodeInput');
   console.log('Log the zipCode:', zipCode.value);
   if (zipCodeRegex.test(zipCode.value)) {
     console.log('Valid ZipCode');
+    await navigateTo({
+        path:`/weather/${zipCode.value}`
+    })
   } else {
     console.log('Invalid ZipCode');
   }
@@ -18,7 +21,7 @@ const onSubmit = () => {
     <div class="container max-w-sm mx-auto py-6">
       <form @submit.prevent="onSubmit">
         <label
-          for="zipCode"
+          for="zipCodeInput"
           class="block text-gray-700 font-bold mb-2"
           >ZIP Code</label
         >
