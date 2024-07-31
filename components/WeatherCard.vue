@@ -2,7 +2,7 @@
 const { forecast } = defineProps(['forecast'])
 const {main: temperature, weather, dt_txt } = forecast
 const [dayOfWeek, month, day, year, time] = new Date(dt_txt).toString().split(' ');
-const [{id, main, description, icon}] = weather
+const [{ main, description, icon}] = weather
 </script>
 
 <template>

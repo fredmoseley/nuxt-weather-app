@@ -1,15 +1,13 @@
 <script setup>
 const zipCode = useState('zipCode', () => '');
-const zipCodeRegex = /^\d{5}$/;
-
 
 const onSubmit = async () => {
+  const zipCodeRegex = /^\d{5}$/;
+
   if (zipCodeRegex.test(zipCode.value)) {
     await navigateTo({
         path:`/weather/${zipCode.value}`
     })
-  } else {
-    console.error('Invalid ZipCode');
   }
 };
 </script>
