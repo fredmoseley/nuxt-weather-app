@@ -6,7 +6,7 @@ const [{id, main, description, icon}] = weather
 </script>
 
 <template>
-  <div class="card text-center">
+  <div class="card text-center my-6">
     <p class="font-bold text-gray-500 m-4">{{ dayOfWeek }}</p>
     <p class="font-bold text-gray-500 m-4">{{ month }} {{ day }}</p>
     <p class="font-bold text-gray-500 m-4">{{ time }}</p>
