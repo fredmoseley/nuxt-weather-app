@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   const gecodingAPIUrl = `https://api.openweathermap.org/geo/1.0/zip?zip=${zipCode}&appid=${weatherAPIKey}`;
 
   try {
-    // Use geocode API to get the lat,lon from the zipcode
+    // Use geocode API to get the lattitude and longitude from the zipcode
     const { name, lat, lon } = await $fetch(gecodingAPIUrl);
 
     // Use openweathermap api to get the forecast
