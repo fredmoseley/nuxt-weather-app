@@ -10,6 +10,10 @@ const onSubmit = async () => {
     })
   }
 };
+
+onBeforeMount(() => {
+  zipCode.value = '';
+});
 </script>
 
 <template>
