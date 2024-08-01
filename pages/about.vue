@@ -12,7 +12,7 @@ import { ref } from 'vue';
     </ol>
     <p>Use the navigation bar to return to the Home screen and look up another city.</p>
     <br />
-    <p class="font-bold">Alternatively, you could retrieve the weather forecast by appending  '/weather/[zip]' to the end of the root URL.   For example '/weather/90210'</p>
+    <p class="font-bold">Alternatively, you could retrieve the weather forecast by appending  '/weather/[zip]' to the end of the base URL.   For example '/weather/90210'</p>
   </div>
 </template>
 
