@@ -9,6 +9,12 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  app: {
+    head: {
+      title: 'Nuxt Weather App',
+      meta: [{ name: 'description', content: 'Check the 5 day/3 hour weather forecast' }],
+    },
+  },
   runtimeConfig: {
     weatherAPIKey: process.env.WEATHER_API_KEY,
   },

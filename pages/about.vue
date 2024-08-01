@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+useHead({
+    title: 'Nuxt Weather App | About',
+    meta: [
+        {name: 'description', content: 'Learn how to use the Nuxt Weather App'}
+    ]
+})
 </script>
 <template>
   <div class="text-black card">
