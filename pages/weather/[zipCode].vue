@@ -1,14 +1,12 @@
 <script setup>
 useHead({
-    title: 'Nuxt Weather App | Forecast',
-    meta: [
-        {name: 'description', content: 'The 5 day / 3 hour Forecast'}
-    ]
+  title: 'Nuxt Weather App | Forecast',
+  meta: [{ name: 'description', content: 'The 5 day / 3 hour Forecast' }],
 })
-const { zipCode } = useRoute().params;
-const { data } = await useFetch(`/api/openweathermap?zipCode=${zipCode}`);
+const { zipCode } = useRoute().params
+const { data } = await useFetch(`/api/openweathermap?zipCode=${zipCode}`)
 if (!data.value) {
-    throw createError({statusCode: 404, statusMessage:`Zip code ${zipCode} not found`, fatal: true})
+  throw createError({ statusCode: 404, statusMessage: `Zip code ${zipCode} not found`, fatal: true })
 }
 </script>
 <template>

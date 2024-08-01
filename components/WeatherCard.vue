@@ -1,12 +1,12 @@
 <script setup lang="ts">
-const { forecast } = defineProps(['forecast']);
-const { main: temperature, weather, dt_txt } = forecast;
-const date = new Date(dt_txt);
-const formattedDate = date.toLocaleDateString('en-US', { weekday: 'short', day: '2-digit', month: 'long' });
+const { forecast } = defineProps(['forecast'])
+const { main: temperature, weather, dt_txt } = forecast
+const date = new Date(dt_txt)
+const formattedDate = date.toLocaleDateString('en-US', { weekday: 'short', day: '2-digit', month: 'long' })
 const formattedTime = date.toLocaleTimeString('en-US', {
   timeStyle: 'short',
-});
-const [{ main, description, icon }] = weather;
+})
+const [{ main, description, icon }] = weather
 </script>
 
 <template>
