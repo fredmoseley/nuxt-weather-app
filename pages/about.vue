@@ -20,7 +20,7 @@ useHead({
     <br />
     <p class="font-bold">
       Alternatively, you could retrieve the weather forecast by appending '/weather/[zip]' to the end of the base URL.
-      For example '/weather/90210'
+      For example 'https://main--fm-nuxt-weather.netlify.app/weather/90210'
     </p>
   </div>
 </template>
