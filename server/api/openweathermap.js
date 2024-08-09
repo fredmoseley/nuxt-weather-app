@@ -14,5 +14,9 @@ export default defineEventHandler(async (event) => {
     return data
   } catch (error) {
     console.error(`Error retrieving the weather forecast: ${error}`)
+    throw createError({
+      status: 500,
+      statusText: 'Failed to retrieve the weather forecast.',
+    })
   }
 })
