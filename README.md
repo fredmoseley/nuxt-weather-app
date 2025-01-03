@@ -7,15 +7,16 @@ A weather forecasting app that provides 3-hour forecasts over 5 days for any US 
 - 3-hour weather forecasts for 5 days
 - Lookup weather by US ZIP code
 - User-friendly interface built with Vue.js
-- TypeScript for type safety
-- Responsive design with CSS
+- Responsive design
 
 ## Technologies
 
-- **Vue**: 75.4%
-- **JavaScript**: 13.4%
-- **TypeScript**: 7.4%
-- **CSS**: 3.8%
+- **Nuxt**
+- **Vue**
+- **Tailwind CSS**
+
+## Third-Party APIs
+* **OpenWeatherMap:** Used to fetch geolocation and weather forecast data.
 
 ## Installation
 
