@@ -8,6 +8,11 @@ A weather forecasting app that provides 3-hour forecasts over 5 days for any US 
 - Lookup weather by US ZIP code
 - User-friendly interface built with Vue.js
 - Responsive design
+<!-- LIVE DEMO -->
+
+## 🚀 Live Demo <a name="live-demo"></a>
+
+- [Live Demo Link](https://fm-nuxt-weather.netlify.app/)
 
 ## Technologies
 
