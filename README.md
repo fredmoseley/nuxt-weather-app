@@ -1,77 +1,85 @@
 # Nuxt Weather App
 
-A weather forecasting app that provides 3-hour forecasts over 5 days for any US location using ZIP code lookup.
+A Nuxt 3 weather app that provides 3-hour forecasts over 5 days for any US location using ZIP code lookup.
 
 ## Features
 
 - 3-hour weather forecasts for 5 days
 - Lookup weather by US ZIP code
-- User-friendly interface built with Vue.js
-- Responsive design
-<!-- LIVE DEMO -->
+- User-friendly interface built with Vue
+- Responsive design with Tailwind CSS
 
-## 🚀 Live Demo <a name="live-demo"></a>
+## 🚀 Live Demo
 
 - [Live Demo Link](https://fm-nuxt-weather.netlify.app/)
 
-## Technologies
+## Tech Stack
 
-- **Nuxt**
-- **Vue**
+- **Nuxt 3**
+- **Vue 3**
 - **Tailwind CSS**
+- **OpenWeatherMap API** (geolocation + forecast data)
 
-## Third-Party APIs
-* **OpenWeatherMap:** Used to fetch geolocation and weather forecast data.
+## Onboarding
 
-## Installation
+### Prerequisites
 
-1. Clone the repository:
+- Node.js 18+ (Node.js 20 LTS recommended)
+- npm 9+
 
-    ```bash
-    git clone https://github.com/fredmoseley/nuxt-weather-app.git
-    ```
+### 1) Clone the repository
 
-2. Navigate to the project directory:
+```bash
+git clone https://github.com/fredmoseley/nuxt-weather-app.git
+cd nuxt-weather-app
+```
 
-    ```bash
-    cd nuxt-weather-app
-    ```
+### 2) Install dependencies
 
-3. Install dependencies:
+```bash
+npm install
+```
 
-    ```bash
-    npm install
-    ```
+### 3) Configure environment variables
 
-## Setup
+Create a local env file from the example:
 
-1. Copy the `.env.example` file to `.env`:
+```bash
+cp .env.example .env
+```
 
-    ```bash
-    cp .env.example .env
-    ```
+Then edit `.env` and set your OpenWeatherMap API key:
 
-2. Open the `.env` file and add your OpenWeatherAPI key:
+```env
+WEATHER_API_KEY=your_openweathermap_api_key
+```
 
-    ```env
-    WEATHER_API_KEY=your_openweather_api_key
-    ```
+You can generate an API key from your OpenWeatherMap account dashboard.
 
-3. Replace `your_openweather_api_key` with your actual OpenWeatherAPI key.
+### 4) Start the app in development mode
 
-## Usage
+```bash
+npm run dev
+```
 
-1. Start the development server:
+The app will be available at `http://localhost:3000`.
 
-    ```bash
-    npm run dev
-    ```
+## Production
 
-2. Open your browser and navigate to `http://localhost:3000`
-
-## Build
-
-To build the project for production, run:
+Build for production:
 
 ```bash
 npm run build
+```
+
+Preview the production build locally:
+
+```bash
+npm run preview
+```
+
+Run the built server output directly:
+
+```bash
+npm run start
+```
