@@ -5,11 +5,13 @@ useHead({
 })
 
 const { zipCode } = useRoute().params
-const { data, pending, error, refresh } = await useFetch(`/api/openweathermap?zipCode=${zipCode}`)
+const { data, status, error, refresh } = await useFetch(`/api/openweathermap?zipCode=${zipCode}`)
 
 const attemptedRetry = ref(false)
 const hasForecastData = computed(() => Array.isArray(data.value?.list) && data.value.list.length > 0)
-
+const isPending = computed(() => status.value === 'pending')
+const weatherLoadingIcon =
+  'https://unpkg.com/@lxg/weather-icons@3.0.1/production/line/svg/partly-cloudy-day.svg'
 watchEffect(() => {
   if (error.value?.statusCode === 404) {
     throw createError({
@@ -40,10 +42,14 @@ const retryFetch = async () => {
 <template>
   <div class="my-16">
     <div
-      v-if="pending"
+      v-if="isPending"
       class="max-w-xl mx-auto p-6 border border-slate-200 rounded-lg bg-slate-50 animate-pulse text-center"
     >
-      <div class="w-12 h-12 rounded-full border-4 border-slate-300 border-t-slate-500 mx-auto mb-4 animate-spin" />
+      <img
+        :src="weatherLoadingIcon"
+        alt="Loading forecast"
+        class="w-24 h-24 mx-auto mb-4"
+      >
       <p class="text-slate-700">Loading forecast...</p>
     </div>
 
