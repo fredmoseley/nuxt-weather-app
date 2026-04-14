@@ -9,15 +9,21 @@ export default defineEventHandler(async (event) => {
     const { lat, lon } = await $fetch(gecodingAPIUrl)
 
     const weatherAPIUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=${units}&appid=${weatherAPIKey}`
-    const data = await $fetch(weatherAPIUrl)
-
-    return data
+    return await $fetch(weatherAPIUrl)
   } catch (error) {
-    console.error(`Error retrieving the weather forecast: ${error}`)
-    return {
-      statusCode: 500,
-      message: 'Error retrieving the weather forecast.  Zipcode not found.',
-      error: true,
+    const statusCode = error?.response?.status || error?.statusCode
+
+    if (statusCode === 404) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: `Zip code ${zipCode} not found`,
+      })
     }
+
+    console.error(`Error retrieving the weather forecast: ${error}`)
+    throw createError({
+      statusCode: 502,
+      statusMessage: 'Unable to retrieve weather data at the moment.',
+    })
   }
 })
