@@ -1,25 +1,52 @@
 <script setup>
 const zipCode = useState('zipCode', () => '')
+const touched = ref(false)
+const zipError = ref('')
+const zipErrorId = 'zipCodeError'
 
-const onSubmit = async () => {
+const validateZipCode = () => {
   const zipCodeRegex = /^\d{5}$/
 
-  if (zipCodeRegex.test(zipCode.value)) {
-    await navigateTo({
-      path: `/weather/${zipCode.value}`,
-    })
+  if (!zipCodeRegex.test(zipCode.value)) {
+    zipError.value = 'Please enter a valid 5-digit US ZIP code.'
+    return false
   }
+
+  zipError.value = ''
+  return true
+}
+
+const onZipInput = () => {
+  zipCode.value = zipCode.value.replace(/\D/g, '').slice(0, 5)
+
+  if (touched.value) {
+    validateZipCode()
+  }
+}
+
+const onSubmit = async () => {
+  touched.value = true
+
+  if (!validateZipCode()) {
+    return
+  }
+
+  await navigateTo({
+    path: `/weather/${zipCode.value}`,
+  })
 }
 
 onBeforeMount(() => {
   zipCode.value = ''
+  touched.value = false
+  zipError.value = ''
 })
 </script>
 
 <template>
   <div class="container mx-auto max-w-lg py-6">
     <div class="rounded bg-white p-6 shadow">
-      <form @submit.prevent="onSubmit" class="space-y-4">
+      <form @submit.prevent="onSubmit" class="space-y-4" novalidate>
         <div class="space-y-1">
           <h1 class="text-xl font-semibold text-gray-900">Check your 5-day forecast</h1>
           <p class="text-sm text-gray-600">Enter your ZIP code to view local weather details.</p>
@@ -41,7 +68,19 @@ onBeforeMount(() => {
             class="w-full rounded border px-3 py-2"
             required
             v-model="zipCode"
+            @input="onZipInput"
+            :aria-invalid="zipError ? 'true' : 'false'"
+            :aria-describedby="zipError ? zipErrorId : undefined"
           />
+          <p
+            v-if="zipError"
+            :id="zipErrorId"
+            role="alert"
+            aria-live="polite"
+            class="text-sm text-red-600"
+          >
+            {{ zipError }}
+          </p>
         </div>
         <button
           type="submit"
