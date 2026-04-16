@@ -25,6 +25,15 @@ const retryFetch = async () => {
   await refresh()
 
   if (error.value) {
+    if (error.value.statusCode === 404) {
+      showError(createError({
+        statusCode: 404,
+        statusMessage: `Zip code ${zipCode} not found`,
+        fatal: true,
+      }))
+      return
+    }
+
     showError(createError({
       statusCode: 502,
       statusMessage: 'We still could not load the forecast. Please try again later.',
