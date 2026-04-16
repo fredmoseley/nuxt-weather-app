@@ -9,8 +9,28 @@ const { data, status, error, refresh } = await useFetch(`/api/openweathermap?zip
 
 const hasForecastData = computed(() => Array.isArray(data.value?.list) && data.value.list.length > 0)
 const isPending = computed(() => status.value === 'pending')
+const groupedForecast = computed(() => {
+  const forecasts = Array.isArray(data.value?.list) ? data.value.list : []
+
+  return forecasts.reduce((groups, forecast) => {
+    const date = new Date(forecast.dt_txt)
+    const dayKey = date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+    })
+
+    if (!groups[dayKey]) {
+      groups[dayKey] = []
+    }
+
+    groups[dayKey].push(forecast)
+    return groups
+  }, {})
+})
 const weatherLoadingIcon =
   'https://unpkg.com/@lxg/weather-icons@3.0.1/production/line/svg/partly-cloudy-day.svg'
+
 watchEffect(() => {
   if (error.value?.statusCode === 404) {
     throw createError({
@@ -83,19 +103,32 @@ const retryFetch = async () => {
     </div>
 
     <div v-else>
-      <div class="my-16">
-        <h1 class="text-7xl text-center mb-4">{{ data.city.name }}</h1>
-        <h1 class="text-5xl text-center">5 day / 3 hour Forecast</h1>
+      <div class="my-16 space-y-3 text-center">
+        <h1 class="text-5xl font-semibold text-slate-900 sm:text-7xl">{{ data.city.name }}</h1>
+        <h2 class="text-3xl font-medium text-slate-700 sm:text-5xl">5 day / 3 hour Forecast</h2>
       </div>
-      <div class="overflow-x-auto sm:overflow-x-visible">
-        <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-5 min-w-max">
-          <div
-            v-for="forecast in data.list"
-            :key="forecast.dt"
-          >
-            <WeatherCard :forecast="forecast" />
+
+      <div class="space-y-10">
+        <section
+          v-for="(forecasts, dayLabel) in groupedForecast"
+          :key="dayLabel"
+          class="space-y-4"
+        >
+          <div class="border-b border-slate-200 pb-2">
+            <h3 class="text-2xl font-semibold text-slate-900">{{ dayLabel }}</h3>
           </div>
-        </div>
+
+          <div class="overflow-x-auto">
+            <div class="grid auto-cols-[minmax(10rem,1fr)] grid-flow-col gap-4 pb-2 md:grid-flow-row md:grid-cols-4 lg:grid-cols-6">
+              <div
+                v-for="forecast in forecasts"
+                :key="forecast.dt"
+              >
+                <WeatherCard :forecast="forecast" />
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   </div>
