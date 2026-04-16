@@ -64,6 +64,20 @@ npm run dev
 
 The app will be available at `http://localhost:3000`.
 
+## Linting
+
+Check formatting/linting:
+
+```bash
+npm run lint
+```
+
+Automatically fix formatting issues:
+
+```bash
+npm run lint:fix
+```
+
 ## Production
 
 Build for production:
