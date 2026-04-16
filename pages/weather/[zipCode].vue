@@ -7,7 +7,6 @@ useHead({
 const { zipCode } = useRoute().params
 const { data, status, error, refresh } = await useFetch(`/api/openweathermap?zipCode=${zipCode}`)
 
-const attemptedRetry = ref(false)
 const hasForecastData = computed(() => Array.isArray(data.value?.list) && data.value.list.length > 0)
 const isPending = computed(() => status.value === 'pending')
 const weatherLoadingIcon =
@@ -20,22 +19,26 @@ watchEffect(() => {
       fatal: true,
     })
   }
+})
 
-  if (attemptedRetry.value && error.value) {
+const retryFetch = async () => {
+  await refresh()
+
+  if (error.value) {
+    if (error.value.statusCode === 404) {
+      showError(createError({
+        statusCode: 404,
+        statusMessage: `Zip code ${zipCode} not found`,
+        fatal: true,
+      }))
+      return
+    }
+
     showError(createError({
       statusCode: 502,
       statusMessage: 'We still could not load the forecast. Please try again later.',
       fatal: true,
     }))
-  }
-})
-
-const retryFetch = async () => {
-  attemptedRetry.value = true
-  await refresh()
-
-  if (!error.value) {
-    attemptedRetry.value = false
   }
 }
 </script>
