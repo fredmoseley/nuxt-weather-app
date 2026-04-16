@@ -12,7 +12,7 @@ const isPending = computed(() => status.value === 'pending')
 const groupedForecast = computed(() => {
   const forecasts = Array.isArray(data.value?.list) ? data.value.list : []
 
-  return forecasts.reduce((groups, forecast) => {
+  const groupedByDay = forecasts.reduce((groups, forecast) => {
     const date = new Date(forecast.dt_txt)
     const dayKey = date.toLocaleDateString('en-US', {
       weekday: 'long',
@@ -27,6 +27,19 @@ const groupedForecast = computed(() => {
     groups[dayKey].push(forecast)
     return groups
   }, {})
+
+  return Object.entries(groupedByDay).map(([dayLabel, entries]) => {
+    const temperatures = entries.map(({ main }) => main.temp)
+    const high = Math.round(Math.max(...temperatures))
+    const low = Math.round(Math.min(...temperatures))
+
+    return {
+      dayLabel,
+      entries,
+      high,
+      low,
+    }
+  })
 })
 const weatherLoadingIcon =
   'https://unpkg.com/@lxg/weather-icons@3.0.1/production/line/svg/partly-cloudy-day.svg'
@@ -110,18 +123,23 @@ const retryFetch = async () => {
 
       <div class="space-y-10">
         <section
-          v-for="(forecasts, dayLabel) in groupedForecast"
-          :key="dayLabel"
+          v-for="dayForecast in groupedForecast"
+          :key="dayForecast.dayLabel"
           class="space-y-4"
         >
-          <div class="border-b border-slate-200 pb-2">
-            <h3 class="text-2xl font-semibold text-slate-900">{{ dayLabel }}</h3>
+          <div class="flex flex-col gap-2 border-b border-slate-200 pb-2 sm:flex-row sm:items-end sm:justify-between">
+            <h3 class="text-2xl font-semibold text-slate-900">{{ dayForecast.dayLabel }}</h3>
+            <p class="text-sm font-medium text-slate-600">
+              H: <span class="text-slate-900">{{ dayForecast.high }}°</span>
+              <span class="mx-2 text-slate-300">|</span>
+              L: <span class="text-slate-900">{{ dayForecast.low }}°</span>
+            </p>
           </div>
 
           <div class="overflow-x-auto">
             <div class="grid auto-cols-[minmax(10rem,1fr)] grid-flow-col gap-4 pb-2 md:grid-flow-row md:grid-cols-4 lg:grid-cols-6">
               <div
-                v-for="forecast in forecasts"
+                v-for="forecast in dayForecast.entries"
                 :key="forecast.dt"
               >
                 <WeatherCard :forecast="forecast" />
