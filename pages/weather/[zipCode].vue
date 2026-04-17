@@ -41,8 +41,7 @@ const groupedForecast = computed(() => {
     }
   })
 })
-const weatherLoadingIcon =
-  'https://unpkg.com/@lxg/weather-icons@3.0.1/production/line/svg/partly-cloudy-day.svg'
+const weatherLoadingIcon = 'https://unpkg.com/@lxg/weather-icons@3.0.1/production/line/svg/partly-cloudy-day.svg'
 
 watchEffect(() => {
   if (error.value?.statusCode === 404) {
@@ -59,19 +58,23 @@ const retryFetch = async () => {
 
   if (error.value) {
     if (error.value.statusCode === 404) {
-      showError(createError({
-        statusCode: 404,
-        statusMessage: `Zip code ${zipCode} not found`,
-        fatal: true,
-      }))
+      showError(
+        createError({
+          statusCode: 404,
+          statusMessage: `Zip code ${zipCode} not found`,
+          fatal: true,
+        })
+      )
       return
     }
 
-    showError(createError({
-      statusCode: 502,
-      statusMessage: 'We still could not load the forecast. Please try again later.',
-      fatal: true,
-    }))
+    showError(
+      createError({
+        statusCode: 502,
+        statusMessage: 'We still could not load the forecast. Please try again later.',
+        fatal: true,
+      })
+    )
   }
 }
 </script>
@@ -85,7 +88,7 @@ const retryFetch = async () => {
         :src="weatherLoadingIcon"
         alt="Loading forecast"
         class="w-24 h-24 mx-auto mb-4"
-      >
+      />
       <p class="text-slate-700">Loading forecast...</p>
     </div>
 
@@ -93,12 +96,14 @@ const retryFetch = async () => {
       v-else-if="error"
       class="max-w-xl mx-auto p-6 border border-amber-300 rounded-lg bg-amber-50 text-center"
     >
-      <h2 class="text-2xl font-semibold text-amber-900 mb-2">
-        We could not load the latest forecast
-      </h2>
-      <p class="text-amber-800 mb-4">
-        This is usually temporary. Please try again.
-      </p>
+      <NuxtLink
+        to="/"
+        class="inline-flex items-center justify-center rounded-md bg-amber-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-900 focus-visible:ring-offset-2 mb-4"
+      >
+        ← Search another ZIP code
+      </NuxtLink>
+      <h2 class="text-2xl font-semibold text-amber-900 mb-2">We could not load the latest forecast</h2>
+      <p class="text-amber-800 mb-4">This is usually temporary. Please try again.</p>
       <button
         class="px-4 py-2 rounded bg-amber-700 text-white hover:bg-amber-800"
         @click="retryFetch"
@@ -111,12 +116,24 @@ const retryFetch = async () => {
       v-else-if="!hasForecastData"
       class="max-w-xl mx-auto p-6 border border-slate-200 rounded-lg bg-slate-50 text-center"
     >
+      <NuxtLink
+        to="/"
+        class="inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2 mb-4"
+      >
+        ← Search another ZIP code
+      </NuxtLink>
       <h2 class="text-2xl font-semibold mb-2">No forecast data available yet</h2>
       <p class="text-slate-600">Please check back soon for upcoming weather updates.</p>
     </div>
 
     <div v-else>
-      <div class="my-16 space-y-3 text-center">
+      <div class="mt-8 mb-12 space-y-3 text-center">
+        <NuxtLink
+          to="/"
+          class="inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
+        >
+          ← Search another ZIP code
+        </NuxtLink>
         <h1 class="text-5xl font-semibold text-slate-900 sm:text-7xl">{{ data.city.name }}</h1>
         <h2 class="text-3xl font-medium text-slate-700 sm:text-5xl">5 day / 3 hour Forecast</h2>
       </div>
@@ -137,7 +154,9 @@ const retryFetch = async () => {
           </div>
 
           <div class="overflow-x-auto">
-            <div class="grid auto-cols-[minmax(10rem,1fr)] grid-flow-col gap-4 pb-2 md:grid-flow-row md:grid-cols-4 lg:grid-cols-6">
+            <div
+              class="grid auto-cols-[minmax(10rem,1fr)] grid-flow-col gap-4 pb-2 md:grid-flow-row md:grid-cols-4 lg:grid-cols-6"
+            >
               <div
                 v-for="forecast in dayForecast.entries"
                 :key="forecast.dt"
