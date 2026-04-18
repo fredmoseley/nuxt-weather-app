@@ -1,4 +1,6 @@
 <script setup>
+import { groupForecastByDay } from '~/utils/forecast'
+
 useHead({
   title: 'Nuxt Weather App | Forecast',
   meta: [{ name: 'description', content: 'The 5 day / 3 hour Forecast' }],
@@ -6,43 +8,15 @@ useHead({
 
 const { zipCode } = useRoute().params
 const { data, status, error, refresh } = await useFetch(`/api/openweathermap?zipCode=${zipCode}`)
+const cityTimezoneOffset = computed(() => data.value?.city?.timezone ?? 0)
 
 const hasForecastData = computed(() => Array.isArray(data.value?.list) && data.value.list.length > 0)
 const isPending = computed(() => status.value === 'pending')
 const groupedForecast = computed(() => {
   const forecasts = Array.isArray(data.value?.list) ? data.value.list : []
-
-  const groupedByDay = forecasts.reduce((groups, forecast) => {
-    const date = new Date(forecast.dt_txt)
-    const dayKey = date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-    })
-
-    if (!groups[dayKey]) {
-      groups[dayKey] = []
-    }
-
-    groups[dayKey].push(forecast)
-    return groups
-  }, {})
-
-  return Object.entries(groupedByDay).map(([dayLabel, entries]) => {
-    const temperatures = entries.map(({ main }) => main.temp)
-    const high = Math.round(Math.max(...temperatures))
-    const low = Math.round(Math.min(...temperatures))
-
-    return {
-      dayLabel,
-      entries,
-      high,
-      low,
-    }
-  })
+  return groupForecastByDay(forecasts, cityTimezoneOffset.value)
 })
-const weatherLoadingIcon =
-  'https://unpkg.com/@lxg/weather-icons@3.0.1/production/line/svg/partly-cloudy-day.svg'
+const weatherLoadingIcon = 'https://unpkg.com/@lxg/weather-icons@3.0.1/production/line/svg/partly-cloudy-day.svg'
 
 watchEffect(() => {
   if (error.value?.statusCode === 404) {
@@ -59,19 +33,23 @@ const retryFetch = async () => {
 
   if (error.value) {
     if (error.value.statusCode === 404) {
-      showError(createError({
-        statusCode: 404,
-        statusMessage: `Zip code ${zipCode} not found`,
-        fatal: true,
-      }))
+      showError(
+        createError({
+          statusCode: 404,
+          statusMessage: `Zip code ${zipCode} not found`,
+          fatal: true,
+        })
+      )
       return
     }
 
-    showError(createError({
-      statusCode: 502,
-      statusMessage: 'We still could not load the forecast. Please try again later.',
-      fatal: true,
-    }))
+    showError(
+      createError({
+        statusCode: 502,
+        statusMessage: 'We still could not load the forecast. Please try again later.',
+        fatal: true,
+      })
+    )
   }
 }
 </script>
@@ -85,7 +63,7 @@ const retryFetch = async () => {
         :src="weatherLoadingIcon"
         alt="Loading forecast"
         class="w-24 h-24 mx-auto mb-4"
-      >
+      />
       <p class="text-slate-700">Loading forecast...</p>
     </div>
 
@@ -93,12 +71,8 @@ const retryFetch = async () => {
       v-else-if="error"
       class="max-w-xl mx-auto p-6 border border-amber-300 rounded-lg bg-amber-50 text-center"
     >
-      <h2 class="text-2xl font-semibold text-amber-900 mb-2">
-        We could not load the latest forecast
-      </h2>
-      <p class="text-amber-800 mb-4">
-        This is usually temporary. Please try again.
-      </p>
+      <h2 class="text-2xl font-semibold text-amber-900 mb-2">We could not load the latest forecast</h2>
+      <p class="text-amber-800 mb-4">This is usually temporary. Please try again.</p>
       <button
         class="px-4 py-2 rounded bg-amber-700 text-white hover:bg-amber-800"
         @click="retryFetch"
@@ -137,12 +111,17 @@ const retryFetch = async () => {
           </div>
 
           <div class="overflow-x-auto">
-            <div class="grid auto-cols-[minmax(10rem,1fr)] grid-flow-col gap-4 pb-2 md:grid-flow-row md:grid-cols-4 lg:grid-cols-6">
+            <div
+              class="grid auto-cols-[minmax(10rem,1fr)] grid-flow-col gap-4 pb-2 md:grid-flow-row md:grid-cols-4 lg:grid-cols-6"
+            >
               <div
                 v-for="forecast in dayForecast.entries"
                 :key="forecast.dt"
               >
-                <WeatherCard :forecast="forecast" />
+                <WeatherCard
+                  :forecast="forecast"
+                  :timezone-offset="cityTimezoneOffset"
+                />
               </div>
             </div>
           </div>
