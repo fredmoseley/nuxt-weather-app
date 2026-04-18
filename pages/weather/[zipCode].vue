@@ -71,6 +71,12 @@ const retryFetch = async () => {
       v-else-if="error"
       class="max-w-xl mx-auto p-6 border border-amber-300 rounded-lg bg-amber-50 text-center"
     >
+      <NuxtLink
+        to="/"
+        class="inline-flex items-center justify-center rounded-md bg-amber-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-900 focus-visible:ring-offset-2 mb-4"
+      >
+        ← Search another ZIP code
+      </NuxtLink>
       <h2 class="text-2xl font-semibold text-amber-900 mb-2">We could not load the latest forecast</h2>
       <p class="text-amber-800 mb-4">This is usually temporary. Please try again.</p>
       <button
@@ -85,12 +91,24 @@ const retryFetch = async () => {
       v-else-if="!hasForecastData"
       class="max-w-xl mx-auto p-6 border border-slate-200 rounded-lg bg-slate-50 text-center"
     >
+      <NuxtLink
+        to="/"
+        class="inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2 mb-4"
+      >
+        ← Search another ZIP code
+      </NuxtLink>
       <h2 class="text-2xl font-semibold mb-2">No forecast data available yet</h2>
       <p class="text-slate-600">Please check back soon for upcoming weather updates.</p>
     </div>
 
     <div v-else>
-      <div class="my-16 space-y-3 text-center">
+      <div class="mt-8 mb-12 space-y-3 text-center">
+        <NuxtLink
+          to="/"
+          class="inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2"
+        >
+          ← Search another ZIP code
+        </NuxtLink>
         <h1 class="text-5xl font-semibold text-slate-900 sm:text-7xl">{{ data.city.name }}</h1>
         <h2 class="text-3xl font-medium text-slate-700 sm:text-5xl">5 day / 3 hour Forecast</h2>
       </div>
