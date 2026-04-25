@@ -1,9 +1,13 @@
 <script setup lang="ts">
-const { forecast } = defineProps(['forecast'])
+const { forecast, timezoneOffset = 0 } = defineProps(['forecast', 'timezoneOffset'])
 const { main: temperature, weather, dt_txt } = forecast
-const date = new Date(dt_txt)
+const timestamp = Number(forecast.dt)
+const date = Number.isFinite(timestamp)
+  ? new Date((timestamp + timezoneOffset) * 1000)
+  : new Date(new Date(`${dt_txt.replace(' ', 'T')}Z`).getTime() + timezoneOffset * 1000)
 const formattedTime = date.toLocaleTimeString('en-US', {
   timeStyle: 'short',
+  timeZone: 'UTC',
 })
 const [{ main, description, icon }] = weather
 </script>
