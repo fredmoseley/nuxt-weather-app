@@ -46,7 +46,11 @@ onBeforeMount(() => {
 <template>
   <div class="container mx-auto max-w-lg py-6">
     <div class="rounded bg-white p-6 shadow">
-      <form @submit.prevent="onSubmit" class="space-y-4" novalidate>
+      <form
+        @submit.prevent="onSubmit"
+        class="space-y-4"
+        novalidate
+      >
         <div class="space-y-1">
           <h1 class="text-xl font-semibold text-gray-900">Check your 5-day forecast</h1>
           <p class="text-sm text-gray-600">Enter your ZIP code to view local weather details.</p>
