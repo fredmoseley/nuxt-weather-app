@@ -9,15 +9,29 @@ const { data, status, error, refresh } = await useFetch(`/api/openweathermap?zip
 
 const hasForecastData = computed(() => Array.isArray(data.value?.list) && data.value.list.length > 0)
 const isPending = computed(() => status.value === 'pending')
+const forecastTimezoneOffset = computed(() => Number(data.value?.city?.timezone) || 0)
+
+const getForecastDate = (forecast, timezoneOffset) => {
+  const timestamp = Number(forecast.dt)
+
+  if (Number.isFinite(timestamp)) {
+    return new Date((timestamp + timezoneOffset) * 1000)
+  }
+
+  const utcDate = new Date(`${forecast.dt_txt.replace(' ', 'T')}Z`)
+  return new Date(utcDate.getTime() + timezoneOffset * 1000)
+}
+
 const groupedForecast = computed(() => {
   const forecasts = Array.isArray(data.value?.list) ? data.value.list : []
 
   const groupedByDay = forecasts.reduce((groups, forecast) => {
-    const date = new Date(forecast.dt_txt)
+    const date = getForecastDate(forecast, forecastTimezoneOffset.value)
     const dayKey = date.toLocaleDateString('en-US', {
       weekday: 'long',
       month: 'long',
       day: 'numeric',
+      timeZone: 'UTC',
     })
 
     if (!groups[dayKey]) {
@@ -143,7 +157,10 @@ const retryFetch = async () => {
                 v-for="forecast in dayForecast.entries"
                 :key="forecast.dt"
               >
-                <WeatherCard :forecast="forecast" />
+                <WeatherCard
+                  :forecast="forecast"
+                  :timezone-offset="forecastTimezoneOffset"
+                />
               </div>
             </div>
           </div>
