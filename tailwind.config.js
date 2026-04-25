@@ -10,7 +10,13 @@ export default {
   ],
 
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        brand: {
+          DEFAULT: '#12b488',
+        },
+      },
+    },
   },
   plugins: [],
 }
