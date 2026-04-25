@@ -1,4 +1,6 @@
 <script setup>
+import { groupForecastByDay } from '~/utils/forecast'
+
 useHead({
   title: 'Nuxt Weather App | Forecast',
   meta: [{ name: 'description', content: 'The 5 day / 3 hour Forecast' }],
@@ -6,40 +8,13 @@ useHead({
 
 const { zipCode } = useRoute().params
 const { data, status, error, refresh } = await useFetch(`/api/openweathermap?zipCode=${zipCode}`)
+const cityTimezoneOffset = computed(() => data.value?.city?.timezone ?? 0)
 
 const hasForecastData = computed(() => Array.isArray(data.value?.list) && data.value.list.length > 0)
 const isPending = computed(() => status.value === 'pending')
 const groupedForecast = computed(() => {
   const forecasts = Array.isArray(data.value?.list) ? data.value.list : []
-
-  const groupedByDay = forecasts.reduce((groups, forecast) => {
-    const date = new Date(forecast.dt_txt)
-    const dayKey = date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-    })
-
-    if (!groups[dayKey]) {
-      groups[dayKey] = []
-    }
-
-    groups[dayKey].push(forecast)
-    return groups
-  }, {})
-
-  return Object.entries(groupedByDay).map(([dayLabel, entries]) => {
-    const temperatures = entries.map(({ main }) => main.temp)
-    const high = Math.round(Math.max(...temperatures))
-    const low = Math.round(Math.min(...temperatures))
-
-    return {
-      dayLabel,
-      entries,
-      high,
-      low,
-    }
-  })
+  return groupForecastByDay(forecasts, cityTimezoneOffset.value)
 })
 const weatherLoadingIcon = 'https://unpkg.com/@lxg/weather-icons@3.0.1/production/line/svg/partly-cloudy-day.svg'
 
@@ -143,7 +118,10 @@ const retryFetch = async () => {
                 v-for="forecast in dayForecast.entries"
                 :key="forecast.dt"
               >
-                <WeatherCard :forecast="forecast" />
+                <WeatherCard
+                  :forecast="forecast"
+                  :timezone-offset="cityTimezoneOffset"
+                />
               </div>
             </div>
           </div>

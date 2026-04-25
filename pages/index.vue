@@ -1,23 +1,18 @@
 <script setup>
+import { getZipCodeError, normalizeZipCodeInput } from '~/utils/zipCode'
+
 const zipCode = useState('zipCode', () => '')
 const touched = ref(false)
 const zipError = ref('')
 const zipErrorId = 'zipCodeError'
 
 const validateZipCode = () => {
-  const zipCodeRegex = /^\d{5}$/
-
-  if (!zipCodeRegex.test(zipCode.value)) {
-    zipError.value = 'Please enter a valid 5-digit US ZIP code.'
-    return false
-  }
-
-  zipError.value = ''
-  return true
+  zipError.value = getZipCodeError(zipCode.value)
+  return !zipError.value
 }
 
 const onZipInput = () => {
-  zipCode.value = zipCode.value.replace(/\D/g, '').slice(0, 5)
+  zipCode.value = normalizeZipCodeInput(zipCode.value)
 
   if (touched.value) {
     validateZipCode()
@@ -46,7 +41,11 @@ onBeforeMount(() => {
 <template>
   <div class="container mx-auto max-w-lg py-6">
     <div class="rounded bg-white p-6 shadow">
-      <form @submit.prevent="onSubmit" class="space-y-4" novalidate>
+      <form
+        @submit.prevent="onSubmit"
+        class="space-y-4"
+        novalidate
+      >
         <div class="space-y-1">
           <h1 class="text-xl font-semibold text-gray-900">Check your 5-day forecast</h1>
           <p class="text-sm text-gray-600">Enter your ZIP code to view local weather details.</p>

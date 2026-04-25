@@ -78,6 +78,28 @@ Automatically fix formatting issues:
 npm run lint:fix
 ```
 
+## Testing
+
+Run the current test suite:
+
+```bash
+npm run test
+```
+
+Watch tests during development:
+
+```bash
+npm run test:watch
+```
+
+Generate a coverage report:
+
+```bash
+npm run test:coverage
+```
+
+The initial test scaffold focuses on reusable helpers in `utils/` so ZIP validation, forecast grouping, and time formatting can be verified independently from page rendering.
+
 ## Production
 
 Build for production:

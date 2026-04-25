@@ -1,10 +1,9 @@
 <script setup lang="ts">
-const { forecast } = defineProps(['forecast'])
-const { main: temperature, weather, dt_txt } = forecast
-const date = new Date(dt_txt)
-const formattedTime = date.toLocaleTimeString('en-US', {
-  timeStyle: 'short',
-})
+import { formatForecastTime } from '~/utils/forecast'
+
+const { forecast, timezoneOffset } = defineProps(['forecast', 'timezoneOffset'])
+const { main: temperature, weather } = forecast
+const formattedTime = formatForecastTime(forecast, timezoneOffset)
 const [{ main, description, icon }] = weather
 </script>
 
